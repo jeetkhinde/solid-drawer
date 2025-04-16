@@ -10,7 +10,7 @@ import { useDrawer } from "~/hooks/hooks";
 
 const CLIENT_DRAWER_ID = "main-client-drawer";
 
-export default function Layout(props: { children: any }) {
+export default function OnlyBar() {
   const [selectedClient, setSelectedClient] = createSignal<Client | null>(null);
 
   const {
@@ -30,40 +30,6 @@ export default function Layout(props: { children: any }) {
   };
 
   return (
-    <div class="bg-base-5 shadow-sm drawer z-50">
-      <input
-        id={CLIENT_DRAWER_ID}
-        type="checkbox"
-        class="drawer-toggle"
-        checked={isClientDrawerOpen()}
-        onChange={handleCheckboxChange}
-      />
-      <div class="drawer-content flex flex-col h-screen">
-        <div class="navbar bg-base-100 shadow-sm">
-          <div class="flex-1">
-             {/* Using label as trigger */}
-             <label
-                for={CLIENT_DRAWER_ID} // Connects to checkbox
-                class="btn btn-link text-xl no-underline font-bold normal-case opacity-70 text-black hover:opacity-100" // Style as needed
-             >
-                {selectedClient()?.name ?? "Select Client"}
-             </label>
-          </div>
-          {/* Other navbar content */}
-        </div>
-
-        
-      </div>
-      <div
-        class={`drawer-side z-50 transition-transform duration-300 ease-in-out ${
-          isClientDrawerOpen() ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <label
-          for={CLIENT_DRAWER_ID}
-          aria-label="close sidebar"
-          class="drawer-overlay"
-        ></label>
         <ClientSelectorDrawer
           id={CLIENT_DRAWER_ID}
           isOpen={isClientDrawerOpen()}
@@ -73,7 +39,6 @@ export default function Layout(props: { children: any }) {
           setSelectedClient={handleClientSelect}
           allClients={dummyClients}
         />
-      </div>
-    </div>
+      
   );
 }
