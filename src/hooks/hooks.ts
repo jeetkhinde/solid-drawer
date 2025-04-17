@@ -1,90 +1,95 @@
-// src/hooks/useClientSelectorState.ts
+// src/hooks/hooks.ts
 import {createSignal, createMemo} from "solid-js";
-import {Client} from "~/types/types";
-import {getUniqueFirstLetters} from "~/utils/utils";
-import {dummyClients} from "../data/clients";
+import {DataType, useData} from "~/store/store";
 
 /**
- * Custom hook to manage the state of the client selector.
- * 
- * @param {() => Client[]} allClients - A reactive accessor function that returns the list of all clients.
- * @returns {Object} - An object containing the state and methods for managing the client selector.
- * @property {() => string} searchTerm - Signal to get the current search term.
- * @property {(value: string) => void} setSearchTerm - Function to update the search term.
- * @property {() => string | null} selectedIndexLetter - Signal to get the currently selected index letter.
- * @property {(value: string | null) => void} setSelectedIndexLetter - Function to update the selected index letter.
- * @property {() => Client[]} filteredClients - Memoized signal to get the filtered list of clients based on the search term and selected index letter.
- * @property {() => string[]} clientIndexLetters - Memoized signal to get the unique first letters of all client names.
- * @property {() => void} resetState - Function to reset the search term and selected index letter to their initial states.
- * 
- * @example
- * import { useClientSelectorState } from "~/hooks/useClientSelectorState";
- * import { createSignal } from "solid-js";
- * 
- * const allClients = createSignal([
- *   { id: "1", name: "Alice" },
- *   { id: "2", name: "Bob" },
- *   { id: "3", name: "Charlie" }
- * ]);
- * 
- * const {
- *   searchTerm,
- *   setSearchTerm,
- *   selectedIndexLetter,
- *   setSelectedIndexLetter,
- *   filteredClients,
- *   clientIndexLetters,
- *   resetState
- * } = useClientSelectorState(allClients);
- * 
- * setSearchTerm("Al");
- * console.log(filteredClients()); // Logs clients matching the search term "Al"
- * 
- * setSelectedIndexLetter("B");
- * console.log(filteredClients()); // Logs clients starting with the letter "B"
- * 
- * resetState();
- * console.log(searchTerm()); // Logs ""
- * console.log(clientIndexLetters()); // Logs unique first letters of all client names
+ * Generates a sorted array of unique uppercase first letters from a list of data items.
+ * Pure function: Always returns the same output for the same input.
+ * @returns {string[]} A sorted array of unique first letters.
  */
-const useClientSelectorState = ( allClients: () => Client[] ) => { // Accept clients as an accessor
+const getUniqueFirstLetters = (): string[] => {
+  const [ data, dataLength ] = useData();
+  if ( dataLength() === 0 ) {
+    return [];
+  }
+  const letters = new Set<string>();
+  data().forEach( ( item ) => {
+    if ( item && typeof item.name === 'string' && item.name.length > 0 ) {
+      letters.add( item.name[ 0 ].toUpperCase() );
+    }
+  } );
+  return Array.from( letters ).sort();
+};
+
+// Define the return type for the useDataSelectorState hook
+interface DataSelectorState {
+  searchTerm: () => string;
+  setSearchTerm: ( value: string ) => void;
+  selectedIndexLetter: () => string | null;
+  setSelectedIndexLetter: ( value: string | null ) => void;
+  filteredData: () => DataType[];
+  indexLetters: () => string[];
+  totalCount: () => number;
+  filteredCount: () => number;
+  searchTermDataCount: () => number;
+
+}
+
+/**
+ * Custom hook to manage the state of the data selector.
+ *
+ * @returns {DataSelectorState} - An object containing the state and methods for managing the data selector.
+ */
+const useDataSelectorState = (): DataSelectorState => {
+  const [ data, dataLength ] = useData();
   const [ searchTerm, setSearchTerm ] = createSignal( "" );
   const [ selectedIndexLetter, setSelectedIndexLetter ] = createSignal<string | null>( null );
 
-  const filteredClients = createMemo( () => {
-    const clients = allClients(); // Access the clients reactively
+  const filteredData = createMemo( () => {
     const letter = selectedIndexLetter();
     const search = searchTerm().trim().toLowerCase();
-    // ... (filtering logic remains the same)
-    const letterFiltered = letter
-      ? clients.filter( ( client ) => client.name.toUpperCase().startsWith( letter ) )
-      : clients;
-    const searchFiltered = search
-      ? letterFiltered.filter( ( client ) => client.name.toLowerCase().includes( search ) )
-      : letterFiltered;
-    return searchFiltered;
+    let dt = data();
+
+    if ( letter ) {
+      dt = dt.filter( ( item ) => item.name.toUpperCase().startsWith( letter ) );
+    }
+    if ( search ) {
+      dt = dt.filter( ( item ) => item.name.toLowerCase().includes( search ) );
+    }
+    return dt;
   } );
 
-  const clientIndexLetters = createMemo( () => getUniqueFirstLetters( allClients() ) );
-
-  const resetState = () => {
-    setSearchTerm( "" );
-    setSelectedIndexLetter( null );
+  const totalCount = () => dataLength();
+  const filteredCount = () => filteredData().length;
+  const searchTermDataCount = () => {
+    const search = searchTerm().trim().toLowerCase();
+    return data().filter( ( item ) => item.name.toLowerCase().includes( search ) ).length;
   };
+
+  const indexLetters = createMemo( () => getUniqueFirstLetters() );
+
   return {
     searchTerm,
     setSearchTerm,
     selectedIndexLetter,
     setSelectedIndexLetter,
-    filteredClients,
-    clientIndexLetters,
-    resetState
+    filteredData,
+    indexLetters,
+    totalCount,
+    filteredCount,
+    searchTermDataCount,
   };
 };
 
+/**
+ * Custom hook to manage the state of a drawer.
+ *
+ * @param {boolean} initialState - The initial state of the drawer (open or closed).
+ * @returns {object} - An object containing the state and methods for managing the drawer.
 
+ */
 const useDrawer = ( initialState = false ) => {
-  const [ isOpen, setIsOpen ] = createSignal( true );
+  const [ isOpen, setIsOpen ] = createSignal( initialState );
 
   const toggleDrawer = () => setIsOpen( !isOpen() );
   const openDrawer = () => setIsOpen( true );
@@ -94,5 +99,4 @@ const useDrawer = ( initialState = false ) => {
   return {isOpen, setIsOpen, toggleDrawer, openDrawer, closeDrawer};
 };
 
-
-export {useClientSelectorState, useDrawer};
+export {useDataSelectorState, useDrawer};

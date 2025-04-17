@@ -17,8 +17,9 @@ import {
   LetterIndex,
   ClientListDisplay,
 } from './ClientSelectorUI';
-import { useClientSelectorState, useDrawer } from '~/hooks/hooks';
-import { dummyClients } from '~/data/clients';
+
+import { useDataSelectorState, useDrawer } from '~/hooks/hooks';
+import { useData } from '~/store/store';
 
 const CLIENT_DRAWER_ID = 'main-client-drawer';
 
@@ -30,13 +31,12 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (
     setSearchTerm,
     selectedIndexLetter,
     setSelectedIndexLetter,
-    filteredClients,
-    clientIndexLetters,
-    resetState,
-  } = useClientSelectorState(() => props.allClients);
+    filteredData,
+    indexLetters,
+  } = useDataSelectorState();
 
   const { isOpen: isClientDrawerOpen, closeDrawer: closeClientDrawer } =
-    useDrawer();
+    useDrawer(true);
 
   let scrollContainerRef: HTMLDivElement | undefined;
   let searchInputRef: HTMLInputElement | undefined;
@@ -45,13 +45,14 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (
     if (isClientDrawerOpen() && searchInputRef) {
       setTimeout(() => searchInputRef?.focus(), 50);
     } else if (!isClientDrawerOpen()) {
-      resetState();
+      setSearchTerm('');
+      setSelectedIndexLetter(null);
     }
   });
 
   const rowVirtualizer = createVirtualizer({
     get count() {
-      return filteredClients().length;
+      return filteredData().length;
     },
     getScrollElement: () => scrollContainerRef ?? null,
     estimateSize: (_index: number) => 36,
@@ -60,7 +61,7 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (
 
   const handleLetterClick = (letter: string | null) => {
     setSelectedIndexLetter(letter);
-    resetState();
+    setSearchTerm('');
     scrollContainerRef?.scrollTo({ top: 0 });
   };
 
@@ -109,7 +110,7 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (
             {' '}
             {/* Optional wrapper for styling/padding */}
             <LetterIndex
-              letters={clientIndexLetters()}
+              letters={indexLetters()}
               selectedLetter={selectedIndexLetter()}
               onLetterSelect={handleLetterClick}
             />
@@ -131,7 +132,7 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (
             {/* ClientListDisplay component */}
             {/* Removed the extra inner div wrapper unless specifically needed */}
             <ClientListDisplay
-              clients={filteredClients()}
+              clients={filteredData()}
               onClientSelect={handleClientSelect}
               noResultsMessage={
                 searchTerm()
@@ -160,7 +161,7 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (
 
 export default function Sidebar() {
   const [selectedClient, setSelectedClient] = createSignal<Client | null>(null);
-
+  const [data, dataLength] = useData(); // Updated to use useData() correctly
   const {
     isOpen: isClientDrawerOpen,
     setIsOpen: setIsClientDrawerOpen,
@@ -185,7 +186,7 @@ export default function Sidebar() {
       onToggle={toggleDrawer}
       selectedClient={selectedClient()}
       setSelectedClient={handleClientSelect}
-      allClients={dummyClients}
+      allClients={data()} // Updated to use props.data() correctly
     />
   );
 }

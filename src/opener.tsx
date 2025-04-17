@@ -2,17 +2,18 @@
 
 // // ~/opner.tsx
 
-import { createSignal, Show } from "solid-js";
-import { ClientSelectorDrawer } from "~/components/ClientSelectorDrawer";
-import { Client } from "~/types/types";
-import { dummyClients } from "~/data/clients";
-import { useDrawer } from "~/hooks/hooks";
+import { createSignal, Show } from 'solid-js';
+import { ClientSelectorDrawer } from '~/components/ClientSelectorDrawer';
+import { Client } from '~/types/types';
+import { dummyClients } from '~/data/clients';
+import { useDrawer } from '~/hooks/hooks';
+import { useData } from './store/store';
 
-const CLIENT_DRAWER_ID = "main-client-drawer";
+const CLIENT_DRAWER_ID = 'main-client-drawer';
 
 export default function Layout(props: { children: any }) {
   const [selectedClient, setSelectedClient] = createSignal<Client | null>(null);
-
+  const [data, dataLength] = useData();
   const {
     isOpen: isClientDrawerOpen,
     setIsOpen: setIsClientDrawerOpen,
@@ -41,22 +42,20 @@ export default function Layout(props: { children: any }) {
       <div class="drawer-content flex flex-col h-screen">
         <div class="navbar bg-base-100 shadow-sm">
           <div class="flex-1">
-             {/* Using label as trigger */}
-             <label
-                for={CLIENT_DRAWER_ID} // Connects to checkbox
-                class="btn btn-link text-xl no-underline font-bold normal-case opacity-70 text-black hover:opacity-100" // Style as needed
-             >
-                {selectedClient()?.name ?? "Select Client"}
-             </label>
+            {/* Using label as trigger */}
+            <label
+              for={CLIENT_DRAWER_ID} // Connects to checkbox
+              class="btn btn-link text-xl no-underline font-bold normal-case opacity-70 text-black hover:opacity-100" // Style as needed
+            >
+              {selectedClient()?.name ?? 'Select Client'}
+            </label>
           </div>
           {/* Other navbar content */}
         </div>
-
-        
       </div>
       <div
         class={`drawer-side z-50 transition-transform duration-300 ease-in-out ${
-          isClientDrawerOpen() ? "translate-x-0" : "-translate-x-full"
+          isClientDrawerOpen() ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <label
@@ -71,7 +70,7 @@ export default function Layout(props: { children: any }) {
           onToggle={() => setIsClientDrawerOpen((prev) => !prev)}
           selectedClient={selectedClient()}
           setSelectedClient={handleClientSelect}
-          allClients={dummyClients}
+          allClients={data()}
         />
       </div>
     </div>
