@@ -126,3 +126,43 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (props
     );
 };
 
+/** @format */
+
+
+import { dummyClients } from "~/data/clients";
+
+const CLIENT_DRAWER_ID = "main-client-drawer";
+
+export default function Sidebar() {
+  const [selectedClient, setSelectedClient] = createSignal<Client | null>(null);
+
+  const {
+    isOpen: isClientDrawerOpen,
+    setIsOpen: setIsClientDrawerOpen,
+    closeDrawer: closeClientDrawer,
+    openDrawer: openClientDrawer, 
+    toggleDrawer
+  } = useDrawer(true);
+
+  const handleClientSelect = (client: Client | null) => {
+    setSelectedClient(client);
+    // closeClientDrawer(); // Closing is handled by ClientSelectorDrawer via onClose
+  };
+
+  const handleCheckboxChange = (event: Event) => {
+    setIsClientDrawerOpen((event.target as HTMLInputElement).checked);
+  };
+
+  return (
+        <ClientSelectorDrawer
+          id={CLIENT_DRAWER_ID}
+          isOpen={isClientDrawerOpen()}
+          onClose={closeClientDrawer}
+          onToggle={toggleDrawer}
+          selectedClient={selectedClient()}
+          setSelectedClient={handleClientSelect}
+          allClients={dummyClients}
+        />
+      
+  );
+}
