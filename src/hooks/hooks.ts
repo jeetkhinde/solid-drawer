@@ -2,6 +2,7 @@
 import {createSignal, createMemo} from "solid-js";
 import {Client} from "~/types/types";
 import {getUniqueFirstLetters} from "~/utils/utils";
+import {dummyClients} from "../data/clients";
 
 /**
  * Custom hook to manage the state of the client selector.
@@ -70,7 +71,6 @@ const useClientSelectorState = ( allClients: () => Client[] ) => { // Accept cli
     setSearchTerm( "" );
     setSelectedIndexLetter( null );
   };
-
   return {
     searchTerm,
     setSearchTerm,
@@ -84,7 +84,7 @@ const useClientSelectorState = ( allClients: () => Client[] ) => { // Accept cli
 
 
 const useDrawer = ( initialState = false ) => {
-  const [ isOpen, setIsOpen ] = createSignal( initialState );
+  const [ isOpen, setIsOpen ] = createSignal( true );
 
   const toggleDrawer = () => setIsOpen( !isOpen() );
   const openDrawer = () => setIsOpen( true );
@@ -93,5 +93,6 @@ const useDrawer = ( initialState = false ) => {
   // Return isOpen signal and specific control functions
   return {isOpen, setIsOpen, toggleDrawer, openDrawer, closeDrawer};
 };
+
 
 export {useClientSelectorState, useDrawer};

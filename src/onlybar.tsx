@@ -16,8 +16,8 @@ export default function OnlyBar() {
   const {
     isOpen: isClientDrawerOpen,
     setIsOpen: setIsClientDrawerOpen,
-    openDrawer: openClientDrawer,
     closeDrawer: closeClientDrawer,
+    openDrawer: openClientDrawer,toggleDrawer
   } = useDrawer(true);
 
   const handleClientSelect = (client: Client | null) => {
@@ -34,7 +34,7 @@ export default function OnlyBar() {
           id={CLIENT_DRAWER_ID}
           isOpen={isClientDrawerOpen()}
           onClose={closeClientDrawer}
-          onToggle={() => setIsClientDrawerOpen((prev) => !prev)}
+          onToggle={toggleDrawer}
           selectedClient={selectedClient()}
           setSelectedClient={handleClientSelect}
           allClients={dummyClients}

@@ -12,7 +12,7 @@ import {
 	ClientListDisplay,
 } from "./ClientSelectorUI";
 
-import {useClientSelectorState} from "../hooks/hooks";
+import {useClientSelectorState, useDrawer} from "~/hooks/hooks";
 
 export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (props) => {
 	 // Use the hook, passing props.allClients as an accessor
@@ -25,7 +25,9 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (props
         clientIndexLetters,
         resetState // Get the reset function
     } = useClientSelectorState(() => props.allClients);
-		
+	
+    const { isOpen: isClientDrawerOpen, closeDrawer: closeClientDrawer } = useDrawer();
+   
    // --- Refs ---
     // Only keep refs needed for *internal* elements (like scrolling or input focus)
     let scrollContainerRef: HTMLDivElement | undefined;
@@ -34,9 +36,9 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (props
    // --- Effects ---
 	  // Autofocus effect now depends on the isOpen prop
     createEffect(() => {
-        if (props.isOpen && searchInputRef) {
+        if (isClientDrawerOpen() && searchInputRef) {
             setTimeout(() => searchInputRef?.focus(), 50);
-        } else if (!props.isOpen) {
+        } else if (!isClientDrawerOpen()) {
              resetState(); // Call the reset function from the hook
         }
     });
@@ -81,7 +83,7 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (props
 
 	const handleClientSelect = (client: Client) => {
 		props.setSelectedClient(client);
-		props.onClose();  // Call the onClose prop to signal the parent to close
+		//closeClientDrawer();  // Close the drawer when a client is selected
 	};
 
 	
@@ -90,11 +92,11 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (props
     // Removed the outer drawer div, checkbox, overlay, etc.
     // Use <Show> to render content only when isOpen is true (optional optimization)
     return (
-        <Show when={props.isOpen}>
+        <Show when={isClientDrawerOpen()}>
             {/* Drawer Content Container - This is the root element now */}
             <div class='bg-base-200 text-base-content min-h-full w-80 p-4 flex flex-col gap-4'>
                 {/* Header - Pass the onClose prop */}
-                <DrawerHeader title='Select Client' onClose={props.onClose} />
+                <DrawerHeader title='Select Client' onClose={closeClientDrawer} />
                 <SearchInput value={searchTerm()} placeholder='Search clients...' onInput={handleSearchInput} onFocus={handleSearchFocus} setRef={el => searchInputRef = el} />
                 <div class='flex-grow overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-base-content scrollbar-track-base-200'>
                     {/* Main Content: A-Z Index + List */}
