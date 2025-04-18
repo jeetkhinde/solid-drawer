@@ -1,5 +1,6 @@
 // File: src/store/store.ts
 import {createStore} from "solid-js/store";
+import {createSignal} from "solid-js";
 
 export interface DataType {
   id: string;
@@ -26,6 +27,12 @@ export const useData = () => {
     dataLength,
   ] as const;
 };
+
+// create signal to set Drawer title
+export const [ drawerTitleStore, setDrawerTitleStore ] = createSignal<string>( "" );
+// create signal to set search placeholder
+export const [ drawSearchPlaceholder, setDrawSearchPlaceholder ] = createSignal<string>( "" );
+
 
 /**
  * Updates the data in the reactive store.

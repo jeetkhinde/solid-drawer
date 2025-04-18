@@ -3,48 +3,14 @@ import {createSignal, createMemo} from "solid-js";
 import {DataType, useData} from "~/store/store";
 
 /**
- * Generates a sorted array of unique uppercase first letters from a list of data items.
- * Pure function: Always returns the same output for the same input.
- * @returns {string[]} A sorted array of unique first letters.
- */
-const getUniqueFirstLetters = (): string[] => {
-  const [ data, dataLength ] = useData();
-  if ( dataLength() === 0 ) {
-    return [];
-  }
-  const letters = new Set<string>();
-  data().forEach( ( item ) => {
-    if ( item && typeof item.name === 'string' && item.name.length > 0 ) {
-      letters.add( item.name[ 0 ].toUpperCase() );
-    }
-  } );
-  return Array.from( letters ).sort();
-};
-
-// Define the return type for the useDataSelectorState hook
-interface DataSelectorState {
-  searchTerm: () => string;
-  setSearchTerm: ( value: string ) => void;
-  selectedIndexLetter: () => string | null;
-  setSelectedIndexLetter: ( value: string | null ) => void;
-  filteredData: () => DataType[];
-  indexLetters: () => string[];
-  totalCount: () => number;
-  filteredCount: () => number;
-  searchTermDataCount: () => number;
-
-}
-
-/**
- * Custom hook to manage the state of the data selector.
+ * Custom hook to filter data based on search term and selected index letter.
  *
- * @returns {DataSelectorState} - An object containing the state and methods for managing the data selector.
+ * @param {function} data - Function that returns the data array.
+ * @param {function} searchTerm - Function that returns the current search term.
+ * @param {function} selectedIndexLetter - Function that returns the selected index letter.
+ * @returns {function} - A memoized function that returns the filtered data.
  */
-const useDataSelectorState = (): DataSelectorState => {
-  const [ data, dataLength ] = useData();
-  const [ searchTerm, setSearchTerm ] = createSignal( "" );
-  const [ selectedIndexLetter, setSelectedIndexLetter ] = createSignal<string | null>( null );
-
+const useFilteredData = ( data: () => DataType[], searchTerm: () => string, selectedIndexLetter: () => string | null ) => {
   const filteredData = createMemo( () => {
     const letter = selectedIndexLetter();
     const search = searchTerm().trim().toLowerCase();
@@ -59,14 +25,31 @@ const useDataSelectorState = (): DataSelectorState => {
     return dt;
   } );
 
-  const totalCount = () => dataLength();
-  const filteredCount = () => filteredData().length;
-  const searchTermDataCount = () => {
-    const search = searchTerm().trim().toLowerCase();
-    return data().filter( ( item ) => item.name.toLowerCase().includes( search ) ).length;
-  };
+  return filteredData;
+};
 
-  const indexLetters = createMemo( () => getUniqueFirstLetters() );
+// Define the return type for the useDataSelectorState hook
+interface DataSelectorState {
+  searchTerm: () => string;
+  setSearchTerm: ( value: string ) => void;
+  selectedIndexLetter: () => string | null;
+  setSelectedIndexLetter: ( value: string | null ) => void;
+  filteredData: () => DataType[];
+  indexLetters: () => string[];
+
+}
+
+/**
+ * Custom hook to manage the state of the data selector.
+ *
+ * @returns {DataSelectorState} - An object containing the state and methods for managing the data selector.
+ */
+const useDataSelectorState = (): DataSelectorState => {
+  const [ data ] = useData();
+  const {searchTerm, setSearchTerm} = useSearchTerm();
+  const {selectedIndexLetter, setSelectedIndexLetter} = useIndexLetter();
+  const filteredData = useFilteredData( data, searchTerm, selectedIndexLetter );
+  const indexLetters = useIndexLetters( data );
 
   return {
     searchTerm,
@@ -75,9 +58,6 @@ const useDataSelectorState = (): DataSelectorState => {
     setSelectedIndexLetter,
     filteredData,
     indexLetters,
-    totalCount,
-    filteredCount,
-    searchTermDataCount,
   };
 };
 
@@ -99,4 +79,71 @@ const useDrawer = ( initialState = false ) => {
   return {isOpen, setIsOpen, toggleDrawer, openDrawer, closeDrawer};
 };
 
-export {useDataSelectorState, useDrawer};
+/**
+ * Custom hook to manage the search term state.
+ *
+ * @returns {object} - An object containing the search term signal and its setter.
+ */
+const useSearchTerm = () => {
+  const [ searchTerm, setSearchTerm ] = createSignal( "" );
+
+  return {
+    searchTerm,
+    setSearchTerm,
+  };
+};
+
+/**
+ * Custom hook to manage the selected index letter state.
+ *
+ * @returns {object} - An object containing the selected index letter signal and its setter.
+ */
+const useIndexLetter = () => {
+  const [ selectedIndexLetter, setSelectedIndexLetter ] = createSignal<string | null>( null );
+
+  return {
+    selectedIndexLetter,
+    setSelectedIndexLetter,
+  };
+};
+
+/**
+ * Custom hook to generate a sorted array of unique uppercase first letters from a list of data items.
+ *
+ * @param {function} data - Function that returns the data array.
+ * @returns {function} - A memoized function that returns the sorted array of unique first letters.
+ */
+const useIndexLetters = ( data: () => DataType[] ) => {
+  const indexLetters = createMemo( () => {
+    const letters = new Set<string>();
+    data().forEach( ( item ) => {
+      if ( item && typeof item.name === "string" && item.name.length > 0 ) {
+        letters.add( item.name[ 0 ].toUpperCase() );
+      }
+    } );
+    return Array.from( letters ).sort();
+  } );
+
+  return indexLetters;
+};
+
+// Define the shared signal outside the hook
+const [ selectedData, setSelectedData ] = createSignal<DataType | null>( null );
+
+/**
+ * Custom hook to manage the selected data state.
+ *
+ * @returns {object} - An object containing the selected data signal and its setter.
+ */
+const useSelectedData = () => {
+  return {
+    selectedData,
+    setSelectedData,
+  };
+};
+
+export {
+  useDataSelectorState,
+  useDrawer,
+  useSelectedData,
+};

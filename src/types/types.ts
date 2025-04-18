@@ -1,3 +1,4 @@
+import {DataType} from "~/store/store";
 
 /**
  * Represents a client object.
@@ -44,8 +45,7 @@ export interface LetterIndexProps {
 /**
  * Props for the ClientListDisplay component.
  */
-export interface ClientListDisplayProps {
-  clients: Client[];
-  onClientSelect: ( client: Client ) => void;
+export interface ListDisplayProps {
+  filteredData: DataType[];
   noResultsMessage?: string;
 }

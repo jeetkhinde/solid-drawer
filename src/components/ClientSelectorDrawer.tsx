@@ -15,11 +15,15 @@ import {
   DrawerHeader,
   SearchInput,
   LetterIndex,
-  ClientListDisplay,
+  ListDisplay,
 } from './ClientSelectorUI';
 
-import { useDataSelectorState, useDrawer } from '~/hooks/hooks';
-import { useData } from '~/store/store';
+import {
+  useDataSelectorState,
+  useDrawer,
+  useSelectedData,
+} from '~/hooks/hooks';
+import { drawSearchPlaceholder, useData } from '~/store/store';
 
 const CLIENT_DRAWER_ID = 'main-client-drawer';
 
@@ -40,6 +44,22 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (
 
   let scrollContainerRef: HTMLDivElement | undefined;
   let searchInputRef: HTMLInputElement | undefined;
+  const { selectedData } = useSelectedData();
+  // Log the id and name whenever selectedData changes
+  createEffect(() => {
+    const data = selectedData();
+    if (data) {
+      console.log('Selected Data ID:', data.id);
+      console.log('Selected Data Name:', data.name);
+    } else {
+      console.log('No data selected');
+    }
+  });
+
+  createEffect(() => {
+    const { selectedData } = useSelectedData();
+    console.log('Selected Data:', selectedData());
+  });
 
   createEffect(() => {
     if (isClientDrawerOpen() && searchInputRef) {
@@ -75,40 +95,22 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (
 
   const handleSearchFocus = () => setSelectedIndexLetter(null);
 
-  const handleClientSelect = (client: Client) => {
-    props.setSelectedClient(client);
-  };
-
   return (
     <Show when={isClientDrawerOpen()}>
-      {/* Outer container: Full height, vertical flex, handles overall boundaries */}
       <div class="bg-base-200 text-base-content h-screen w-80 flex flex-col overflow-hidden z-50">
-        {/* Sticky Header: Takes its natural height, stays at top */}
         <div class="sticky top-0 z-10 p-4 flex flex-col gap-4 bg-base-200">
-          <DrawerHeader title="Select Client" onClose={closeClientDrawer} />
+          <DrawerHeader onClose={closeClientDrawer} />
           <SearchInput
             value={searchTerm()}
-            placeholder="Search clients..."
+            placeholder={drawSearchPlaceholder()}
             onInput={handleSearchInput}
             onFocus={handleSearchFocus}
             setRef={(el) => (searchInputRef = el)}
           />
         </div>
 
-        {/* Middle Content Wrapper: Grows vertically, contains index + scrollable list */}
-        {/* - flex-grow: Takes all available vertical space between header and footer.
-      - min-h-0: Crucial for flex children containing scrollable/shrinking content.
-      - flex: Lays out LetterIndex and List Container in a row (default flex direction).
-      - gap-2: Space between LetterIndex and List Container.
-      - overflow-hidden: Prevents this container itself from overflowing if children misbehave.
-      - p-4: Apply horizontal/top padding here if desired around both elements, or keep specific padding below. Removed bottom padding (pb-4) to avoid double padding with the list area.
-    */}
         <div class="flex-grow min-h-0 flex gap-2 overflow-hidden px-4 pt-4">
-          {/* LetterIndex: Fixed width (implicitly), does not scroll itself */}
-          {/* Add pt-4 if you want padding consistent with the scrollable list's top padding */}
           <div class="pt-4">
-            {' '}
-            {/* Optional wrapper for styling/padding */}
             <LetterIndex
               letters={indexLetters()}
               selectedLetter={selectedIndexLetter()}
@@ -116,24 +118,12 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (
             />
           </div>
 
-          {/* List Scroll Container: Takes remaining horizontal space AND full available height */}
-          {/* - flex-grow: Takes remaining horizontal space in the row.
-        - h-full: Takes the full height of the parent (Middle Content Wrapper). Crucial for defining the scroll boundary.
-        - overflow-y-auto: Enables vertical scrolling ONLY for the list.
-        - overscroll-contain: Keeps scroll chaining behavior.
-        - min-h-0: Good practice.
-        - p-4: Padding *inside* the scrollable list area. Removed mb-2, footer handles gap now.
-        - scrollContainerRef: Should be on the element that actually scrolls.
-      */}
           <div
             ref={scrollContainerRef!}
             class="flex-grow h-full overflow-y-auto overscroll-contain min-h-0 p-4"
           >
-            {/* ClientListDisplay component */}
-            {/* Removed the extra inner div wrapper unless specifically needed */}
-            <ClientListDisplay
-              clients={filteredData()}
-              onClientSelect={handleClientSelect}
+            <ListDisplay
+              filteredData={filteredData()}
               noResultsMessage={
                 searchTerm()
                   ? `No results for "${searchTerm()}"`
@@ -145,11 +135,7 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (
           </div>
         </div>
 
-        {/* Fixed Footer: Doesn't grow or shrink, fixed height */}
-        {/* Add mt-2 here for gap *above* the footer if needed */}
         <div class="flex-shrink-0 h-10 bg-base-200 mt-2">
-          {' '}
-          {/* Added bg for consistency */}
           <div class="flex items-center justify-center h-full">
             <label class="cursor-pointer label">Footer Content</label>
           </div>
