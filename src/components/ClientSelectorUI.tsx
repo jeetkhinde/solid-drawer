@@ -133,7 +133,6 @@ export const ListItem: Component<{
   return (
     <button
       onClick={() => {
-        console.log('ListItem clicked:', props.data); // Debug log
         setSelectedData(props.data);
       }}
       class="block w-full text-left p-1 hover:bg-base-300 focus:bg-base-300 rounded text-sm"
@@ -174,7 +173,6 @@ export const ListDisplay: Component<ListDisplayProps> = (props) => {
     >
       <For each={props.filteredData}>
         {(data) => {
-          console.log('Rendering ListItem with data:', data); // Debug log
           return <ListItem data={data} />;
         }}
       </For>

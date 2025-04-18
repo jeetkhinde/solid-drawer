@@ -44,21 +44,10 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (
 
   let scrollContainerRef: HTMLDivElement | undefined;
   let searchInputRef: HTMLInputElement | undefined;
-  const { selectedData } = useSelectedData();
-  // Log the id and name whenever selectedData changes
-  createEffect(() => {
-    const data = selectedData();
-    if (data) {
-      console.log('Selected Data ID:', data.id);
-      console.log('Selected Data Name:', data.name);
-    } else {
-      console.log('No data selected');
-    }
-  });
 
   createEffect(() => {
     const { selectedData } = useSelectedData();
-    console.log('Selected Data:', selectedData());
+    console.log('selectedData:', selectedData());
   });
 
   createEffect(() => {
