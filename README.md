@@ -1,6 +1,6 @@
-# Sidebar Component
+# Solid Drawer Component
 
-A reusable sidebar component built with SolidJS, designed for client selection and filtering. This package includes a `Drawer` component, hooks, and stores to manage state effectively.
+A reusable drawer component built with SolidJS, designed for client selection and filtering. This package includes a `Drawer` component, hooks, and stores to manage state effectively.
 
 ## Features
 
@@ -14,13 +14,13 @@ Install the package using your preferred package manager:
 
 ```bash
 # Using npm
-npm install sidebar-component
+npm install @jeetkhinde/solid-drawer
 
 # Using pnpm
-pnpm add sidebar-component
+pnpm add @jeetkhinde/solid-drawer
 
 # Using bun
-bun add sidebar-component
+bun add @jeetkhinde/solid-drawer
 ```
 
 ## Usage
@@ -30,18 +30,18 @@ bun add sidebar-component
 You can use the `Drawer` component directly in your application:
 
 ```tsx
-import { Drawer } from 'sidebar-component';
+import { Drawer } from '@jeetkhinde/solid-drawer';
 import {
   setData,
   setDrawerTitleStore,
   setDrawSearchPlaceholder,
-} from 'sidebar-component';
+} from '@jeetkhinde/solid-drawer';
 import { dummyClients } from './data/clients';
 
 // Set up the stores
 setData(dummyClients);
-setDrawerTitleStore('Select client');
-setDrawSearchPlaceholder('Search client');
+setDrawerTitleStore('Select a client');
+setDrawSearchPlaceholder('Search a client');
 
 const App = () => {
   return (
@@ -54,57 +54,75 @@ const App = () => {
 export default App;
 ```
 
+### DataType
+
+Shape of data.
+`interface DataType {
+  id: string;
+  name: string;
+}`
+
 ### Using Hooks
 
 This package provides several hooks for managing state:
 
-- `useDrawer`: Manage the open/close state of the drawer.
-- `useDataSelectorState`: Manage search term, selected index letter, and filtered data.
-- `useSelectedData`: Manage the selected data state.
+#### `useDrawer`
 
-Example:
+Manages the open/close state of the drawer.
 
-```tsx
-import { useDrawer, useDataSelectorState } from 'sidebar-component';
+- **Properties**:
+  - `isOpen: () => boolean` - Returns whether the drawer is open.
+  - `toggleDrawer: () => void` - Toggles the drawer state.
+  - `openDrawer: () => void` - Opens the drawer.
+  - `closeDrawer: () => void` - Closes the drawer.
 
-const MyComponent = () => {
-  const { isOpen, toggleDrawer } = useDrawer();
-  const { searchTerm, setSearchTerm, filteredData } = useDataSelectorState();
+#### `useSelectedData`
 
-  return (
-    <div>
-      <button onClick={toggleDrawer}>Toggle Drawer</button>
-      <input
-        type="text"
-        value={searchTerm()}
-        onInput={(e) => setSearchTerm(e.currentTarget.value)}
-      />
-      <ul>
-        {filteredData().map((item) => (
-          <li key={item.id}>{item.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-};
-```
+Manages the selected data state.
+
+- **Properties**:
+  - `selectedData: () => any` - Returns the currently selected data of DataType type.
+  - `setSelectedData: (data: any) => void` - Sets the selected data, be shape must be DataType type.
+
+#### `useDataSelectorState`
+
+Manages search term, selected index letter, and filtered data.
+
+- **Properties**:
+  - `searchTerm: () => string` - Returns the current search term.
+  - `setSearchTerm: (term: string) => void` - Sets the search term.
+  - `selectedIndexLetter: () => string` - Returns the selected index letter.
+  - `setSelectedIndexLetter: (letter: string) => void` - Sets the selected index letter.
+  - `filteredData: () => any[]` - Returns the filtered data.
+  - `indexLetters: () => string[]` - Returns the available index letters.
 
 ### Stores
 
 The following stores are available for shared state management:
 
-- `setData`: Set the list of clients.
-- `setDrawerTitleStore`: Set the title of the drawer.
-- `setDrawSearchPlaceholder`: Set the placeholder text for the search input.
+#### `setData`
 
-Example:
+- **Description**: Sets the list of data.
+- **Type**: `(data: any[]) => void`
+
+#### `setDrawerTitleStore`
+
+- **Description**: Sets the title of the drawer.
+- **Type**: `(title: string) => void`
+
+#### `setDrawSearchPlaceholder`
+
+- **Description**: Sets the placeholder text for the search input.
+- **Type**: `(placeholder: string) => void`
+
+### Example
 
 ```tsx
 import {
   setData,
   setDrawerTitleStore,
   setDrawSearchPlaceholder,
-} from 'sidebar-component';
+} from '@jeetkhinde/solid-drawer';
 
 setData(dummyClients);
 setDrawerTitleStore('Select client');
