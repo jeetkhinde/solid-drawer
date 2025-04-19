@@ -1,6 +1,6 @@
 {
   "name": "@jeetkhinde/solid-drawer",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A SolidJS component for creating a responsive drawer menu.",
   "author": "Jeet Khinde",
   "type": "module",
