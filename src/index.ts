@@ -10,3 +10,5 @@ export {
   setDrawerTitleStore,
   setDrawSearchPlaceholder,
 } from './store/store';
+
+export * from './types/types';

@@ -6,7 +6,7 @@ import {
   setDrawerTitleStore,
   setDrawSearchPlaceholder,
 } from '~/store/store';
-import { dummyClients } from './data/clients';
+import { dummyClients } from './data/data';
 
 const App: Component = () => {
   setData(dummyClients);

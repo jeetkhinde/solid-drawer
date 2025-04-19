@@ -4,8 +4,7 @@
     "": {
       "name": "@jeetkhinde/solid-drawer",
       "dependencies": {
-        "@jeetkhinde/solid-drawer": "^1.0.0",
-        "solid-js": "^1.9.5",
+        "@jeetkhinde/solid-drawer": "^1.0.3",
       },
       "devDependencies": {
         "@tailwindcss/postcss": "^4.1.4",
@@ -115,7 +114,7 @@
 
     "@esbuild/win32-x64": ["@esbuild/win32-x64@0.25.2", "", { "os": "win32", "cpu": "x64" }, "sha512-kM3HKb16VIXZyIeVrM1ygYmZBKybX8N4p754bw390wGO3Tf2j4L2/WYL+4suWujpgf6GBYs3jv7TyUivdd05JA=="],
 
-    "@jeetkhinde/solid-drawer": ["@jeetkhinde/solid-drawer@1.0.0", "", { "dependencies": { "solid-js": "^1.9.5" }, "peerDependencies": { "@tanstack/solid-virtual": "^3.13.6", "framer-motion": "^12.7.3" } }, "sha512-hSg89w54t/ShKnHaHPbCybsO5tQF4M+LGzHt+VkfX0od16tKbCy1RpVQ1KZoLKh5OQey+OYuIhwFuv1nPuTshg=="],
+    "@jeetkhinde/solid-drawer": ["@jeetkhinde/solid-drawer@1.0.3", "", { "peerDependencies": { "@tanstack/solid-virtual": "^3.13.6", "framer-motion": "^12.7.3", "solid-js": "1.9.5" } }, "sha512-wFnZupa5f0/K6ofiePdaq+qTpoU7cCAbNS9nTPg3QvMXxhpXVktZMhHTkFTcBo2B7TnWAfHl5EHt1/0o8ZXx2w=="],
 
     "@jridgewell/gen-mapping": ["@jridgewell/gen-mapping@0.3.8", "", { "dependencies": { "@jridgewell/set-array": "^1.2.1", "@jridgewell/sourcemap-codec": "^1.4.10", "@jridgewell/trace-mapping": "^0.3.24" } }, "sha512-imAbBGkb+ebQyxKgzv5Hu2nmROxoDOXHh80evxdoXNOrvAnVx7zimzc1Oo5h9RlfV4vPXaE2iM5pOFbvOCClWA=="],
 

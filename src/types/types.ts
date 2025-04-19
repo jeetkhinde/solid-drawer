@@ -1,21 +1,20 @@
-import {DataType} from "~/store/store";
 
 /**
- * Represents a client object.
+ * Represents a Data object.
  */
-export interface Client {
+
+export interface DataType {
   id: string;
   name: string;
 }
-
 /**
- * Props for the ClientSelectorDrawer component.
+ * Props for the SelectorDrawer component.
  */
-export type ClientSelectorDrawerProps = {
+export type SelectorDrawerProps = {
   id: string;
   isOpen: boolean;
   onToggle: () => void;
-  allClients: Client[];
+  allData: DataType[];
   onClose: () => void; // Optional: Callback to close the drawer
 };
 

@@ -1,10 +1,10 @@
-// ~/components//clients.ts
 
-import {Client} from "~/types/types";
+
+import {DataType} from "~/types/types";
 
 
 // Shape of a client object that will be used in the client selector.
-export const dummyClients: Client[] = [
+export const dummyClients: DataType[] = [
   {id: "1", name: "Alpha Solutions"},
   {id: "2", name: "Bravo Tech"},
   {id: "3", name: "Charlie Innovations"},

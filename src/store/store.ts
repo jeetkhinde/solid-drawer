@@ -1,11 +1,7 @@
 // File: src/store/store.ts
 import {createStore} from "solid-js/store";
 import {createSignal} from "solid-js";
-
-export interface DataType {
-  id: string;
-  name: string;
-}
+import type {DataType} from "~/types/types";
 
 // No initial data — store starts empty
 export const [ dataStore, setDataStore ] = createStore( {

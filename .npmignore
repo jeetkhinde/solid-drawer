@@ -1,9 +1,0 @@
-# Ignore all files except package.json and dist/
-
-!package.json
-!dist/
-
-# Ignore specific files in dist/
-
-# Ignore test files
-test/
