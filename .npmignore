@@ -1,0 +1,39 @@
+# Ignore all files except package.json and dist/
+*
+!package.json
+!dist/
+
+# Ignore specific files in dist/
+dist/index.tsx
+dist/index.css
+dist/index.html
+dist/App.tsx
+dist/client.ts
+dist/data/*
+dist/assets/*
+dist/components/*
+dist/hooks/*
+dist/layouts/*
+dist/pages/*
+dist/routes/*
+dist/services/*
+dist/store/*
+dist/styles/*
+dist/utils/*
+dist/types/*
+dist/contexts/*
+dist/constants/*
+# Ignore specific files
+bun.lock
+index.html
+tailwind.config.js
+tsconfig.json
+vite.config.ts
+.gitignore
+.prettierrc
+
+# Ignore all source files
+src/
+
+# Ignore test files
+test/

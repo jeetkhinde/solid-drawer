@@ -33,7 +33,6 @@ export const [ drawerTitleStore, setDrawerTitleStore ] = createSignal<string>( "
 // create signal to set search placeholder
 export const [ drawSearchPlaceholder, setDrawSearchPlaceholder ] = createSignal<string>( "" );
 
-
 /**
  * Updates the data in the reactive store.
  *

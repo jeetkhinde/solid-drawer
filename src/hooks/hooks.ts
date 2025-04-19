@@ -61,23 +61,7 @@ const useDataSelectorState = (): DataSelectorState => {
   };
 };
 
-/**
- * Custom hook to manage the state of a drawer.
- *
- * @param {boolean} initialState - The initial state of the drawer (open or closed).
- * @returns {object} - An object containing the state and methods for managing the drawer.
 
- */
-const useDrawer = ( initialState = false ) => {
-  const [ isOpen, setIsOpen ] = createSignal( initialState );
-
-  const toggleDrawer = () => setIsOpen( !isOpen() );
-  const openDrawer = () => setIsOpen( true );
-  const closeDrawer = () => setIsOpen( false ); // Specific function to close
-
-  // Return isOpen signal and specific control functions
-  return {isOpen, setIsOpen, toggleDrawer, openDrawer, closeDrawer};
-};
 
 /**
  * Custom hook to manage the search term state.
@@ -141,6 +125,24 @@ const useSelectedData = () => {
     setSelectedData,
   };
 };
+/**
+ * Custom hook to manage the state of a drawer.
+ *
+ * @param {boolean} initialState - The initial state of the drawer (open or closed).
+ * @returns {object} - An object containing the state and methods for managing the drawer.
+
+ */
+const useDrawer = ( initialState = false ) => {
+  const [ isOpen, setIsOpen ] = createSignal( initialState );
+  const toggleDrawer = () => setIsOpen( !isOpen() );
+  const openDrawer = () => setIsOpen( true );
+  const closeDrawer = () => setIsOpen( false );
+
+  // Return isOpen signal and specific control functions
+  return {isOpen, setIsOpen, toggleDrawer, openDrawer, closeDrawer};
+};
+
+
 
 export {
   useDataSelectorState,

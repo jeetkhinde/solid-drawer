@@ -1,22 +1,14 @@
 /** @format */
 
-// ~/components/ClientSelectorDrawer.tsx
-import {
-  Component,
-  createMemo,
-  Show,
-  onMount,
-  createEffect,
-  createSignal,
-} from 'solid-js';
+// ~/components/Drawer.tsx
+import { Show, createEffect } from 'solid-js';
 import { createVirtualizer } from '@tanstack/solid-virtual';
-import { Client, ClientSelectorDrawerProps } from '~/types/types';
 import {
   DrawerHeader,
   SearchInput,
   LetterIndex,
   ListDisplay,
-} from './ClientSelectorUI';
+} from './DrawerUI';
 
 import {
   useDataSelectorState,
@@ -25,11 +17,7 @@ import {
 } from '~/hooks/hooks';
 import { drawSearchPlaceholder, useData } from '~/store/store';
 
-const CLIENT_DRAWER_ID = 'main-client-drawer';
-
-export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (
-  props
-) => {
+export const Drawer = () => {
   const {
     searchTerm,
     setSearchTerm,
@@ -133,35 +121,3 @@ export const ClientSelectorDrawer: Component<ClientSelectorDrawerProps> = (
     </Show>
   );
 };
-
-export default function Sidebar() {
-  const [selectedClient, setSelectedClient] = createSignal<Client | null>(null);
-  const [data, dataLength] = useData(); // Updated to use useData() correctly
-  const {
-    isOpen: isClientDrawerOpen,
-    setIsOpen: setIsClientDrawerOpen,
-    closeDrawer: closeClientDrawer,
-    openDrawer: openClientDrawer,
-    toggleDrawer,
-  } = useDrawer(true);
-
-  const handleClientSelect = (client: Client | null) => {
-    setSelectedClient(client);
-  };
-
-  const handleCheckboxChange = (event: Event) => {
-    setIsClientDrawerOpen((event.target as HTMLInputElement).checked);
-  };
-
-  return (
-    <ClientSelectorDrawer
-      id={CLIENT_DRAWER_ID}
-      isOpen={isClientDrawerOpen()}
-      onClose={closeClientDrawer}
-      onToggle={toggleDrawer}
-      selectedClient={selectedClient()}
-      setSelectedClient={handleClientSelect}
-      allClients={data()} // Updated to use props.data() correctly
-    />
-  );
-}

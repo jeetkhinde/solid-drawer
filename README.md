@@ -1,34 +1,129 @@
-## Usage
+# Sidebar Component
 
-Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.
+A reusable sidebar component built with SolidJS, designed for client selection and filtering. This package includes a `Drawer` component, hooks, and stores to manage state effectively.
 
-This is the reason you see a `pnpm-lock.yaml`. That being said, any package manager will work. This file can be safely be removed once you clone a template.
+## Features
+
+- **Drawer Component**: A customizable drawer with search returned data.
+- **Hooks**: Predefined hooks for managing state, filtering data, and more.
+- **Stores**: Shared state management for seamless integration.
+
+## Installation
+
+Install the package using your preferred package manager:
 
 ```bash
-$ npm install # or pnpm install or yarn install
+# Using npm
+npm install sidebar-component
+
+# Using pnpm
+pnpm add sidebar-component
+
+# Using bun
+bun add sidebar-component
 ```
 
-### Learn more on the [Solid Website](https://solidjs.com) and come chat with us on our [Discord](https://discord.com/invite/solidjs)
+## Usage
 
-## Available Scripts
+### Importing the Drawer Component
 
-In the project directory, you can run:
+You can use the `Drawer` component directly in your application:
 
-### `npm run dev` or `npm start`
+```tsx
+import { Drawer } from 'sidebar-component';
+import {
+  setData,
+  setDrawerTitleStore,
+  setDrawSearchPlaceholder,
+} from 'sidebar-component';
+import { dummyClients } from './data/clients';
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+// Set up the stores
+setData(dummyClients);
+setDrawerTitleStore('Select client');
+setDrawSearchPlaceholder('Search client');
 
-The page will reload if you make edits.<br>
+const App = () => {
+  return (
+    <div>
+      <Drawer />
+    </div>
+  );
+};
 
-### `npm run build`
+export default App;
+```
 
-Builds the app for production to the `dist` folder.<br>
-It correctly bundles Solid in production mode and optimizes the build for the best performance.
+### Using Hooks
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+This package provides several hooks for managing state:
 
-## Deployment
+- `useDrawer`: Manage the open/close state of the drawer.
+- `useDataSelectorState`: Manage search term, selected index letter, and filtered data.
+- `useSelectedData`: Manage the selected data state.
 
-You can deploy the `dist` folder to any static host provider (netlify, surge, now, etc.)
+Example:
+
+```tsx
+import { useDrawer, useDataSelectorState } from 'sidebar-component';
+
+const MyComponent = () => {
+  const { isOpen, toggleDrawer } = useDrawer();
+  const { searchTerm, setSearchTerm, filteredData } = useDataSelectorState();
+
+  return (
+    <div>
+      <button onClick={toggleDrawer}>Toggle Drawer</button>
+      <input
+        type="text"
+        value={searchTerm()}
+        onInput={(e) => setSearchTerm(e.currentTarget.value)}
+      />
+      <ul>
+        {filteredData().map((item) => (
+          <li key={item.id}>{item.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+```
+
+### Stores
+
+The following stores are available for shared state management:
+
+- `setData`: Set the list of clients.
+- `setDrawerTitleStore`: Set the title of the drawer.
+- `setDrawSearchPlaceholder`: Set the placeholder text for the search input.
+
+Example:
+
+```tsx
+import {
+  setData,
+  setDrawerTitleStore,
+  setDrawSearchPlaceholder,
+} from 'sidebar-component';
+
+setData(dummyClients);
+setDrawerTitleStore('Select client');
+setDrawSearchPlaceholder('Search client');
+```
+
+## Development
+
+This package is built with:
+
+- [SolidJS](https://solidjs.com)
+- [Bun](https://bun.sh)
+
+To build the package locally:
+
+```bash
+bun run build
+```
+
+## License
+
+This project is licensed under the MIT License.

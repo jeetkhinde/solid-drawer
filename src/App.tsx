@@ -1,8 +1,6 @@
 import type { Component } from 'solid-js';
 
-import styles from './App.module.css';
-
-import Sidebar from '~/components/ClientSelectorDrawer';
+import { Drawer } from '~/components/Drawer';
 import {
   setData,
   setDrawerTitleStore,
@@ -14,9 +12,10 @@ const App: Component = () => {
   setData(dummyClients);
   setDrawerTitleStore('Select client');
   setDrawSearchPlaceholder('Search client');
+
   return (
-    <div class={styles.App}>
-      <Sidebar />
+    <div>
+      <Drawer />
     </div>
   );
 };

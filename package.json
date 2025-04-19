@@ -1,7 +1,8 @@
 {
-  "name": "vite-template-solid",
+  "name": "@jeetkhinde/solid-drawer",
   "version": "0.0.0",
-  "description": "",
+  "description": "A SolidJS component for creating a responsive drawer menu.",
+  "author": "Jeet Khinde",
   "type": "module",
   "scripts": {
     "start": "vite",
@@ -18,13 +19,16 @@
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.4",
     "typescript": "^5.7.2",
-    "vite": "^6.0.0",
-    "vite-plugin-solid": "^2.11.6"
+    "vite": "^6.3.2",
+    "vite-plugin-solid": "^2.11.6",
+    "vite-plugin-static-copy": "^2.3.1"
+  },
+  "peerDependencies": {
+    "solid-js": "1.9.5",
+    "framer-motion": "^12.7.3",
+    "@tanstack/solid-virtual": "^3.13.6"
   },
   "dependencies": {
-    "@tanstack/solid-virtual": "^3.13.6",
-    "framer-motion": "^12.7.3",
-    "solid-js": "^1.9.5",
-    "solid-motionone": "^1.0.3"
+    "solid-js": "^1.9.5"
   }
 }

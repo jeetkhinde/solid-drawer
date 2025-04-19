@@ -15,8 +15,6 @@ export type ClientSelectorDrawerProps = {
   id: string;
   isOpen: boolean;
   onToggle: () => void;
-  selectedClient: Client | null;
-  setSelectedClient: ( client: Client | null ) => void; // Setter function for selected client
   allClients: Client[];
   onClose: () => void; // Optional: Callback to close the drawer
 };
